@@ -4,10 +4,13 @@
     <arg name="use_sim_time" default="true" />
     <arg name="gui" default="true" />
     <arg name="headless" default="false" />
-    <arg name="world_name" default="$(find jackal_gazebo)/worlds/jackal_race.world" />
+    <arg name="world_name" default="$(find jackal_interface)/world/autoware_jackal.world" />
     <arg name="use_teleop" default="true"/>
     <arg name="config_filepath" default="$(find jackal_interface)/config/ds4.yaml"/>
     <arg name="use_rviz" default="true"/>
+
+    <node name="relay_points" pkg="topic_tools" type="relay" args="/velodyne_points /points_raw" />
+    <node name="relay_odom" pkg="topic_tools" type="relay" args="/jackal_velocity_controller/odom /vehicle/odom" />
 
     <node pkg="jackal_interface" type="jackal_interface_node" name="jackal_interface_node" output="log" respawn="false" respawn_delay="0">
     </node>
@@ -31,10 +34,11 @@
     </group>
 
     <group if="$(arg use_rviz)">
-        <node pkg="rviz" type="rviz" name="rviz" args="-D $(find jackal_interface)/config/jackal.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find jackal_interface)/config/jackal.rviz"/>
     </group>
 
     <group if="$(arg with_gazebo)">
+        <param name="use_sim_time" value="true"/>
         <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model jackal -param robot_description -x 0 -y 0 -z 1.0" />
 
         <include file="$(find gazebo_ros)/launch/empty_world.launch">

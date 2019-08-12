@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <autoware_msgs/VehicleCmd.h>
+#include <geometry_msgs/Twist.h>
 
 class JackalInterface
 {
@@ -12,6 +13,8 @@ public:
 private:
     ros::NodeHandle nh_;
     ros::NodeHandle pnh_;
+    ros::Publisher twist_cmd_pub_;
+    ros::Subscriber vehicle_cmd_sub_;
     void vehicleCommandCallback(const autoware_msgs::VehicleCmd::ConstPtr msg);
 };
 
